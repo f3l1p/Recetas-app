@@ -1,26 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import MyButton from "../components/MyButton";
+import { View, Text, StyleSheet, FlatList } from "react-native";
+import { useSelector } from "react-redux";
 
-import { CATEGORIES } from "../data/dummy-data";
+import { CATEGORIES, MEALS } from "../data/dummy-data";
+import MealList from "../components/MealList";
 
 const CategoryMealsScreen = (props) => {
-	//const catId = props.navigation.getParam("categoryId");
-
 	const { categoryId } = props.route.params;
 
+	const avalibleMeals = useSelector((state) => state.meals.meals);
+
 	const selectedCategory = CATEGORIES.find((cat) => cat.id === categoryId);
-	return (
-		<View style={styles.container}>
-			<Text>{selectedCategory.title}</Text>
-			<MyButton
-				title="Go to Details!"
-				onPress={() => {
-					props.navigation.navigate("Detail");
-				}}
-			/>
-		</View>
+
+	const displayedMeals = avalibleMeals.filter(
+		(meal) => meal.categoryIds.indexOf(categoryId) >= 0
 	);
+
+	return <MealList listData={displayedMeals} navigation={props.navigation} />;
 };
 
 const styles = StyleSheet.create({

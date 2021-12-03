@@ -2,8 +2,20 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
+import { enableScreens } from "react-native-screens";
+import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
 
-import MealsNavigator from "./navigation/MealsNavigator";
+import MainNavigator from "./navigation";
+import mealsReducer from "./store/reducers/meals";
+
+enableScreens();
+
+const rootReducer = combineReducers({
+	meals: mealsReducer,
+});
+
+const store = createStore(rootReducer);
 
 export default function App() {
 	const [myFonts] = useFonts({
@@ -16,7 +28,11 @@ export default function App() {
 		return null;
 	}
 
-	return <MealsNavigator />;
+	return (
+		<Provider store={store}>
+			<MainNavigator />
+		</Provider>
+	);
 }
 
 const styles = StyleSheet.create({
